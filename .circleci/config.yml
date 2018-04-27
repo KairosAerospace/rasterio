@@ -13,7 +13,7 @@ jobs:
 #      - run: kairos_python_tests
       - run: kairos_python_package
 #      - run: kairos_python_deploy
-      - run: for f in `ls dist/*.whl`; do mv $f kairos-$f; done
+      - run: for f in `ls dist/*.whl`; do mv $f dist/kairos-`basename $f`; done
       - run: twine upload -u $KAIROS_PUBLISH_USER -p $KAIROS_PUBLISH_API_KEY -r artifactory-python3 --config-file $PYPIRC ./dist/*.whl
       - run: kairos_lambda_publish
       - run: kairos_python_cleanup
