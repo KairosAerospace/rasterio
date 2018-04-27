@@ -17,14 +17,14 @@ jobs:
       - run: twine upload -u $KAIROS_PUBLISH_USER -p $KAIROS_PUBLISH_API_KEY -r artifactory-python3 --config-file $PYPIRC ./dist/*.whl
       - run: kairos_lambda_publish
       - run: kairos_python_cleanup
-      - store_artifacts:
-          path: test-output
-          destination: test-output
-      - store_artifacts:
-          path: dist
-          destination: build-artifacts
-      - store_test_results:
-          path: test-output
+#      - store_artifacts:
+#          path: test-output
+#          destination: test-output
+#      - store_artifacts:
+#          path: dist
+#          destination: build-artifacts
+#      - store_test_results:
+#          path: test-output
 notify:
   webhooks:
     - url: https://bdoa77w3h0.execute-api.us-west-2.amazonaws.com/webhook/
