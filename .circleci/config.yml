@@ -1,0 +1,31 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: kairosaero/dkr-circleci:production
+    working_directory: /opt/kairos/build-home/repo
+    steps:
+      - checkout
+      - run: kairos_container_init
+      - run: pip install cython
+      - run: kairos_python_dependencies
+      - run: kairos_python_build
+#      - run: kairos_python_tests
+      - run: kairos_python_package
+#      - run: kairos_python_deploy
+      - run: for f in `ls dist/*.whl`; do mv dist/$f dist/kairos-$f; done
+      - run: twine upload -u $KAIROS_PUBLISH_USER -p $KAIROS_PUBLISH_API_KEY -r artifactory-python3 --config-file $PYPIRC ./dist/*.whl
+      - run: kairos_lambda_publish
+      - run: kairos_python_cleanup
+      - store_artifacts:
+          path: test-output
+          destination: test-output
+      - store_artifacts:
+          path: dist
+          destination: build-artifacts
+      - store_test_results:
+          path: test-output
+notify:
+  webhooks:
+    - url: https://bdoa77w3h0.execute-api.us-west-2.amazonaws.com/webhook/
+
